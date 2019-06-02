@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  sampleapp1:
+    build: .
+    environment:
+      - SERVER_PORT=8080
+      - MONGODB_URI=mongodb://mymongo:27017/mymongdb
+      - MONGODB_STATUS_HOST=mymongo
+      - MONGODB_STATUS_PORT=28017
+    ports:
+      - 8080:8080
+    depends_on:
+      - mymongo
+      
+  sampleapp2:
+    build:
+        context: . # Use an image built from the specified dockerfile in the current directory. ../SampleApp2Directory/
+        dockerfile: Dockerfile
+    environment:
+      - SERVER_PORT=8081
+      - MONGODB_URI=mongodb://mymongo:27017/mymongdb
+      - MONGODB_STATUS_HOST=mymongo
+      - MONGODB_STATUS_PORT=28017
+    ports:
+      - 8081:8081
+    depends_on:
+      - mymongo
+      
+  mymongo:
+    image: mongo:3.6
+    #volumes:
+     # - ./_data:/data/db , "--rest"
+    ports:
+      - 12345:27017
+      - 23456:28017
+    command: ["mongod"]
